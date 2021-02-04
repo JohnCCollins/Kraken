@@ -13,13 +13,13 @@ function love.load()
     love.graphics.setBackgroundColor( 0, .4, .73 )
     love.mouse.setVisible(false)
 
-    sounds = {}
-    sounds.music = love.audio.newSource('sounds/krakentheme.mp3', 'stream')
-    sounds.splash = love.audio.newSource('sounds/Splash.mp3', 'static')
-    sounds.wreck = love.audio.newSource('sounds/Wreckage.mp3', 'static')
-    sounds.growl = love.audio.newSource('sounds/Growl.mp3', 'static')
-    splash = sounds.splash:clone()
-    
+    -- sounds = {}
+    -- sounds.music = love.audio.newSource('sounds/krakentheme.mp3', 'stream')
+    -- sounds.splash = love.audio.newSource('sounds/Splash.mp3', 'static')
+    -- sounds.wreck = love.audio.newSource('sounds/Wreckage.mp3', 'static')
+    -- sounds.growl = love.audio.newSource('sounds/Growl.mp3', 'static')
+    -- splash = sounds.splash:clone()
+    -- wreck = sounds.wreck:clone()
 
     sprites = {}
     sprites.background = love.graphics.newImage('sprites/ocean.png')
@@ -65,14 +65,14 @@ function love.load()
     maxTime = 45
     timer = maxTime
 
-    shipCount = 301
+    shipCount = 300
     armCount = 0
 
     killcount = 0 
 
     if gameState == 2 then
         spawnShip()
-        love.audio.play(sounds.music)
+        -- love.audio.play(sounds.music)
     end    
 end
 
@@ -99,8 +99,8 @@ function love.update(dt)
             end
             if s.dying == false then
                 if s.y > love.graphics.getHeight()/2 + 50 then
-                    if s.x > love.graphics.getWidth()/2 + 230 or s.x < love.graphics.getWidth()/2 -230 then
-                        if s.x < love.graphics.getWidth()/2 -230 then
+                    if s.x > love.graphics.getWidth()/2 + 110 or s.x < love.graphics.getWidth()/2 -110 then
+                        if s.x < love.graphics.getWidth()/2 -110 then
                             s.side = true
                             s.flip = true
                             s.animation = animations.shipSide
@@ -116,8 +116,8 @@ function love.update(dt)
                     end
                 end   
                 if s.y < love.graphics.getHeight()/2 - 50 then
-                    if s.x > love.graphics.getWidth()/2 + 230  or s.x < love.graphics.getWidth()/2 -230 then
-                        if s.x < love.graphics.getWidth()/2 -230 then 
+                    if s.x > love.graphics.getWidth()/2 + 110  or s.x < love.graphics.getWidth()/2 -110 then
+                        if s.x < love.graphics.getWidth()/2 -110 then 
                             s.side = true
                             s.flip = true
                             s.animation = animations.shipSide
@@ -146,7 +146,7 @@ function love.update(dt)
                         end   
                    end 
                     gameState = 1
-                    love.audio.stop()
+                    -- love.audio.stop()
 
                 end    
             end    
@@ -158,13 +158,14 @@ function love.update(dt)
             if distanceBetween(s.x, s.y, a.x, a.y) < 60 then
                 if s.dying == false then
                     s.animation = animations.wreck:clone()
+                    -- love.audio.play(splash)
                     s.speed = s.speed / 2
                     s.dying = true
                     Timer.after(0.15, function()  s.dead = true end)
                 end    
                 if a.dying == false then
                     a.animation = animations.submerge:clone()
-                    love.audio.play(splash)
+                    -- love.audio.play(splash)
                     a.dying = true
                     Timer.after(0.25, function() a.dead = true end)
                 end    
@@ -223,9 +224,10 @@ function love.draw()
     animations.background:draw(sprites.background, 0, 0)
     love.graphics.setColor(1, 1, 1, 2)
     if gameState == 2 then 
-    animations.head:draw(sprites.kraken, kraken.x, kraken.y, nil, 0.75, nil, 71, 71)
-    love.graphics.draw(sprites.eye, kraken.x-20, kraken.y+25, krakenMouseAngle(), nil, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
-    love.graphics.draw(sprites.eye, kraken.x+20, kraken.y+25, krakenMouseAngle(), nil, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
+    animations.head:draw(sprites.kraken, kraken.x, kraken.y, nil, 0.85, nil, 71, 71)
+
+    love.graphics.draw(sprites.eye, kraken.x-22, kraken.y+29, krakenMouseAngle(), 1.40, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
+    love.graphics.draw(sprites.eye, kraken.x+22, kraken.y+29, krakenMouseAngle(), 1.40, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
 
     for i,s in ipairs(ships) do
         if s.type == 5 or s.type == 6 then
@@ -257,9 +259,9 @@ function love.draw()
             a.animation:draw(sprites.arm, a.x, a.y, nil, 0.75, nil, 82, 120)
         end
     end    
-    if gameState == 2 then
+    
         love.graphics.print("Land-Apes Eaten: " .. killcount, 5, 5, nil, 1)
-    end 
+    
         love.graphics.print(shipCount, love.graphics.getWidth()-55, 5, nil, 1)
         love.graphics.draw(sprites.shipScore, love.graphics.getWidth()-80, 20, nil, -0.5, nil, sprites.shipScore:getWidth()/2, sprites.shipScore:getHeight()/2)
     
@@ -292,7 +294,7 @@ function love.keypressed( key )
                 shipCount = 501
                 killcount = 0
                 spawnShip()
-                love.audio.play(sounds.music)
+                -- love.audio.play(sounds.music)
         end    
     end    
 end    
