@@ -274,7 +274,7 @@ function love.draw()
         love.graphics.setFont(defaultFont)
         love.graphics.setColor(1, 1, 1)
     end    
-    love.graphics.print(collectgarbage("count"), 675, 500)
+    
 end    
 
 function love.keypressed( key )
@@ -377,20 +377,6 @@ function spawnArm()
         Timer.after(0.35, function() arm.animation = kraken.animation:clone() end)
     end
 end    
--- function collision() 
-    
---     for i,s in ipairs(ships) do
---         for j,a in ipairs(arms) do
---             if s.dying or a.dying then
---                 a.animation = animations.submerge:clone()
---                 s.animation = animations.wreck:clone()
---                 love.audio.play(splash)
---             end    
---         end
---     end  
-
--- end
-
 
 function distanceBetween(x1, y1, x2, y2)
     return math.sqrt( (x2 - x1)^2 +(y2 -y1)^2 )
