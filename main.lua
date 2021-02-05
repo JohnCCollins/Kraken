@@ -65,7 +65,7 @@ function love.load()
     maxTime = 45
     timer = maxTime
 
-    shipCount = 300
+    shipCount = 500
     armCount = 0
 
     killcount = 0 
@@ -77,7 +77,7 @@ function love.load()
 end
 
 function love.update(dt)
-    
+    empty()
     if armCount >= 8 then
         armCount = 8
     elseif armCount < 0 then
@@ -89,8 +89,7 @@ function love.update(dt)
             if s.type == 5 then
                 s.x = s.x + math.cos( shipKrakenAngle(s) + 20 ) * s.speed * dt
                 s.y = s.y + math.sin( shipKrakenAngle(s) + 20) * s.speed * dt
-            end    
-            if s.type == 6 then
+            elseif s.type == 6 then
                 s.x = s.x + math.cos( shipKrakenAngle(s) - 20) * s.speed * dt
                 s.y = s.y + math.sin( shipKrakenAngle(s) - 20) * s.speed * dt
             else
@@ -226,8 +225,8 @@ function love.draw()
     if gameState == 2 then 
     animations.head:draw(sprites.kraken, kraken.x, kraken.y, nil, 0.85, nil, 71, 71)
 
-    love.graphics.draw(sprites.eye, kraken.x-22, kraken.y+29, krakenMouseAngle(), 1.40, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
-    love.graphics.draw(sprites.eye, kraken.x+22, kraken.y+29, krakenMouseAngle(), 1.40, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
+    love.graphics.draw(sprites.eye, kraken.x-22, kraken.y+30, krakenMouseAngle(), 1.30, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
+    love.graphics.draw(sprites.eye, kraken.x+22, kraken.y+30, krakenMouseAngle(), 1.30, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
 
     for i,s in ipairs(ships) do
         if s.type == 5 or s.type == 6 then
@@ -240,9 +239,8 @@ function love.draw()
                 s.animation:draw(sprites.ship, s.x, s.y, nil, -0.70, 0.70, 71.5, 59)
                 else
                 s.animation:draw(sprites.ship, s.x, s.y, nil, 0.70, nil, 71.5, 59)
-                end
-            end    
-            if s.side == false then
+                end   
+            elseif s.side == false then
                 s.animation:draw(sprites.ship, s.x, s.y, nil, 0.85, nil, 71.5, 59)
             end
         end 
@@ -267,14 +265,16 @@ function love.draw()
     
     
     if gameState == 1 then 
-        love.graphics.setColor(0.50, 0.10, 0.10)
+        love.graphics.setColor(0.80, 0.30, 0.10)
         love.graphics.setFont(titleFont)
         love.graphics.newFont('Ocean-9mZL.ttf', 200)
+        love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 245, 148.5)
+        love.graphics.setColor(0.50, 0.10, 0.10)
         love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 250, 150)
         love.graphics.setFont(defaultFont)
         love.graphics.setColor(1, 1, 1)
     end    
-    
+    love.graphics.print(collectgarbage("count"), 675, 500)
 end    
 
 function love.keypressed( key )
@@ -394,4 +394,8 @@ end
 
 function distanceBetween(x1, y1, x2, y2)
     return math.sqrt( (x2 - x1)^2 +(y2 -y1)^2 )
+end    
+
+function empty()
+    collectgarbage("collect")
 end    
