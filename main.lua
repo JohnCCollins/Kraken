@@ -2,6 +2,7 @@ function love.load()
 
     -- love.window.setMode(1000, 800)
     math.randomseed(os.time())
+    love.audio.setVolume( 0.35)
 
    
     anim8 = require 'libraries/anim8/anim8'
@@ -9,17 +10,18 @@ function love.load()
 
     defaultFont = love.graphics.newFont('Ocean-9mZL.ttf', 30)
     titleFont = love.graphics.newFont('Ocean-9mZL.ttf', 200)
+    subtitleFont = love.graphics.newFont('Ocean-9mZL.ttf', 60)
 
     love.graphics.setBackgroundColor( 0, .4, .73 )
     love.mouse.setVisible(false)
 
-    -- sounds = {}
-    -- sounds.music = love.audio.newSource('sounds/krakentheme.mp3', 'stream')
-    -- sounds.splash = love.audio.newSource('sounds/Splash.mp3', 'static')
-    -- sounds.wreck = love.audio.newSource('sounds/Wreckage.mp3', 'static')
-    -- sounds.growl = love.audio.newSource('sounds/Growl.mp3', 'static')
-    -- splash = sounds.splash:clone()
-    -- wreck = sounds.wreck:clone()
+    sounds = {}
+    sounds.music = love.audio.newSource('sounds/krakentheme.mp3', 'stream')
+    sounds.splash = love.audio.newSource('sounds/Splash.mp3', 'static')
+    sounds.wreck = love.audio.newSource('sounds/Wreckage.mp3', 'static')
+    sounds.growl = love.audio.newSource('sounds/Growl.mp3', 'static')
+    splash = sounds.splash:clone()
+    wreck = sounds.wreck:clone()
 
     sprites = {}
     sprites.background = love.graphics.newImage('sprites/ocean.png')
@@ -65,14 +67,14 @@ function love.load()
     maxTime = 45
     timer = maxTime
 
-    shipCount = 500
+    shipCount = 300
     armCount = 0
 
     killcount = 0 
 
     if gameState == 2 then
         spawnShip()
-        -- love.audio.play(sounds.music)
+        love.audio.play(sounds.music)
     end    
 end
 
@@ -145,7 +147,7 @@ function love.update(dt)
                         end   
                    end 
                     gameState = 1
-                    -- love.audio.stop()
+                    love.audio.stop()
 
                 end    
             end    
@@ -157,14 +159,14 @@ function love.update(dt)
             if distanceBetween(s.x, s.y, a.x, a.y) < 60 then
                 if s.dying == false then
                     s.animation = animations.wreck:clone()
-                    -- love.audio.play(splash)
+                    love.audio.play(splash)
                     s.speed = s.speed / 2
                     s.dying = true
                     Timer.after(0.15, function()  s.dead = true end)
                 end    
                 if a.dying == false then
                     a.animation = animations.submerge:clone()
-                    -- love.audio.play(splash)
+                    love.audio.play(splash)
                     a.dying = true
                     Timer.after(0.25, function() a.dead = true end)
                 end    
@@ -229,11 +231,6 @@ function love.draw()
     love.graphics.draw(sprites.eye, kraken.x+22, kraken.y+30, krakenMouseAngle(), 1.30, nil, sprites.eye:getWidth()/2, sprites.eye:getHeight()/2)
 
     for i,s in ipairs(ships) do
-        if s.type == 5 or s.type == 6 then
-            love.graphics.setColor(0.80, 0.80, 80)
-        else 
-            love.graphics.setColor(1, 1, 1)         
-        end    
             if s.side == true then
                 if s.flip == true then
                 s.animation:draw(sprites.ship, s.x, s.y, nil, -0.70, 0.70, 71.5, 59)
@@ -245,7 +242,7 @@ function love.draw()
             end
         end 
     end
-        love.graphics.setColor(1, 1, 1)
+        
         if distanceBetween(love.mouse.getX(), love.mouse.getY(), kraken.x, kraken.y) > 55 then
             animations.cursor:draw(sprites.arm, love.mouse.getX() - 82, love.mouse.getY() - 120)
         end
@@ -271,8 +268,19 @@ function love.draw()
         love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 245, 148.5)
         love.graphics.setColor(0.50, 0.10, 0.10)
         love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 250, 150)
+        
+        love.graphics.setFont(subtitleFont)
+        love.graphics.setColor(0.80, 0.30, 0.10)
+        love.graphics.print('A Game by John C. Collins', 261, love.graphics.getHeight()/2 + 51, nil, 0.5)
+        love.graphics.setColor(0.50, 0.10, 0.10)
+        love.graphics.print('A Game by John C. Collins', 260, love.graphics.getHeight()/2 + 50, nil, 0.5)
+        
+        
         love.graphics.setFont(defaultFont)
         love.graphics.setColor(1, 1, 1)
+        love.graphics.print('Press [SPACE] to begin', 275, 555, nil, 1)
+
+        
     end    
     
 end    
@@ -291,10 +299,10 @@ function love.keypressed( key )
     
         if gameState == 1 then
             gameState = 2
-                shipCount = 501
+                shipCount = 301
                 killcount = 0
                 spawnShip()
-                -- love.audio.play(sounds.music)
+                love.audio.play(sounds.music)
         end    
     end    
 end    
