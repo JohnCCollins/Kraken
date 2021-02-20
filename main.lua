@@ -146,7 +146,7 @@ function love.update(dt)
                            armCount = 0
                         end   
                    end 
-                    gameState = 1
+                    gameState = 3
                     love.audio.stop()
 
                 end    
@@ -264,7 +264,6 @@ function love.draw()
     if gameState == 1 then 
         love.graphics.setColor(0.80, 0.30, 0.10)
         love.graphics.setFont(titleFont)
-        love.graphics.newFont('Ocean-9mZL.ttf', 200)
         love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 245, 148.5)
         love.graphics.setColor(0.50, 0.10, 0.10)
         love.graphics.print("Kraken", love.graphics.getWidth()/2, love.graphics.getHeight()/2, nil, 1, nil, 250, 150)
@@ -281,6 +280,17 @@ function love.draw()
         love.graphics.print('Press [SPACE] to begin', 275, 555, nil, 1)
 
         
+    end    
+
+    if gameState == 3 then 
+        love.graphics.setColor(0.80, 0.30, 0.10)
+        love.graphics.setFont(titleFont)
+        love.graphics.print("Game Over!", love.graphics.getWidth()/2 - 50, love.graphics.getHeight()/2, nil, 0.5, nil, 245, 148.5)
+        love.graphics.setColor(0.50, 0.10, 0.10)
+        love.graphics.print("Game Over!", love.graphics.getWidth()/2 - 50, love.graphics.getHeight()/2, nil, 0.5, nil, 250, 150)
+        love.graphics.setFont(defaultFont)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.print('Return to title? [SPACE]', 275, 555, nil, 1)
     end    
     
 end    
@@ -304,6 +314,10 @@ function love.keypressed( key )
                 spawnShip()
                 love.audio.play(sounds.music)
         end    
+
+        if gameState == 3 then
+            gameState = 1
+        end    
     end    
 end    
 
@@ -312,7 +326,16 @@ function love.mousepressed(x, y, button)
             if armCount < 8 and distanceBetween(love.mouse.getX(), love.mouse.getY(), kraken.x, kraken.y) > 50 then
             spawnArm()
             end
-
+    end  
+    if button == 2 then
+        for i,a in ipairs(arms) do
+            a.animation = animations.submerge:clone() 
+            Timer.after(0.30, function() a.dead = true  end)
+            if a.dead == true then
+                table.remove(arms, i)
+                armCount = 0
+            end   
+        end 
     
     end    
 end    
